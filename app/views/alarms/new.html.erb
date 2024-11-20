@@ -1,41 +1,18 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>アラーム設定</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-    }
-    label {
-      margin-top: 10px;
-    }
-    input, textarea, button {
-      margin-top: 5px;
-      padding: 5px;
-    }
-  </style>
-</head>
-<body>
-  <h1>アラーム設定</h1>
-  <form action="/alarms" method="POST">
-    <label for="date">日付</label>
-    <input type="date" id="date" name="date" required>
-    
-    <label for="time">時刻</label>
-    <input type="time" id="time" name="time" required>
-    
-    <label for="comment">コメント</label>
-    <textarea id="comment" name="comment" rows="3" required></textarea>
-    
-    <button type="submit">保存</button>
-  </form>
-  <button onclick="location.href='/'">キャンセル</button>
-</body>
-</html>
+<h1>新しいアラームを追加</h1>
+
+<%= form_with(model: @alarm, local: true) do |form| %>
+  <div>
+    <%= form.label :alarm_time, '日時' %>
+    <%= form.datetime_local_field :alarm_time %>
+  </div>
+
+  <div>
+    <%= form.label :comment, 'コメント' %>
+    <%= form.text_field :comment %>
+  </div>
+
+  <div>
+    <%= form.submit '保存' %>
+  </div>
+<% end %>
+

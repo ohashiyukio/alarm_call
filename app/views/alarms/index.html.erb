@@ -24,19 +24,38 @@
 <body>
   <h1>アラーム一覧</h1>
   <div id="alarmList">
-    <!-- アラームが表示される -->
-    <div class="alarm-item">
-      <span>2024-11-21 08:00 - 朝のジョギング</span>
-      <button onclick="setAlarm()">セット</button>
-    </div>
+    <!-- 動的にアラームを表示 -->
+    <% @alarms.each do |alarm| %>
+      <div class="alarm-item">
+        <span><%= alarm.alarm_time.strftime('%Y-%m-%d %H:%M') %> - <%= alarm.comment %></span>
+        <button onclick="setAlarm()">セット</button>
+      </div>
+    <% end %>
   </div>
-  <button onclick="location.href='/settings'">新しいアラームを追加</button>
+  <button onclick="location.href='<%= new_alarm_path %>'">新しいアラームを追加</button>
 
-  <script>
-    function setAlarm() {
-      alert("アラームをセットしました！");
-      // 実際にはバックエンドでアクティブ状態を保存
-    }
-  </script>
-</body>
-</html>
+<script>
+  const alarms = [
+    <% @alarms.each do |alarm| %>
+      {
+        time: "<%= alarm.alarm_time.strftime('%Y-%m-%d %H:%M:%S') %>",
+        audioPath: "/alarm_<%= alarm.id %>.mp3",
+        comment: "<%= alarm.comment %>"
+      },
+    <% end %>
+  ];
+
+  function checkAlarms() {
+    const now = new Date().toISOString().slice(0, 19).replace('T', ' '); // 現在時刻をフォーマット
+    alarms.forEach(alarm => {
+      if (now === alarm.time) {
+        const audio = new Audio(alarm.audioPath);
+        audio.play();
+        alert(alarm.comment); // 画面にコメントも表示
+      }
+    });
+  }
+
+  // 毎秒アラームをチェック
+  setInterval(checkAlarms, 1000);
+</script>

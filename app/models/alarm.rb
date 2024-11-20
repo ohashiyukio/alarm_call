@@ -1,3 +1,3 @@
 class Alarm < ApplicationRecord
-  validates :date, :time, :comment, presence: true
+  validates :alarm_time, :comment, presence: true
 end
