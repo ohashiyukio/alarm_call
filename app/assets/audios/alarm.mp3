@@ -1,0 +1,7 @@
+<audio id="alarmSound" src="output.mp3"></audio>
+<script>
+  const audio = document.getElementById("alarmSound");
+  setTimeout(() => {
+      audio.play();
+  }, 5 * 60 * 1000);
+</script>

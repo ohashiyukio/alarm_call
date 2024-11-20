@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>アラーム</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      text-align: center;
+    }
+    #alarmMessage {
+      font-size: 1.5em;
+      margin-top: 20px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>アラーム</h1>
+  <div id="alarmMessage">2024-11-21 08:00 - 朝のジョギング</div>
+  <button id="stopButton">ストップ</button>
+
+  <audio id="alarmSound" loop>
+    <source src="alarm.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    const alarmSound = document.getElementById('alarmSound');
+    const stopButton = document.getElementById('stopButton');
+    alarmSound.play();
+
+    stopButton.addEventListener('click', () => {
+      alarmSound.pause();
+      alert('アラームを停止しました');
+      // 必要ならバックエンド側に停止状態を通知
+    });
+  </script>
+</body>
+</html>

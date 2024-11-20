@@ -1,11 +1,42 @@
-<h1>時間だよ！</h1>
-<% @posts.each do |post| %>
-  <div class="post">
-    <div class="post-date">
-      投稿日時：<%= post.created_at %>
-    </div>
-    <div class="post-content">
-      <%= post.content %>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>アラーム一覧</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .alarm-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+    button {
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>アラーム一覧</h1>
+  <div id="alarmList">
+    <!-- アラームが表示される -->
+    <div class="alarm-item">
+      <span>2024-11-21 08:00 - 朝のジョギング</span>
+      <button onclick="setAlarm()">セット</button>
     </div>
   </div>
-<% end %>
+  <button onclick="location.href='/settings'">新しいアラームを追加</button>
+
+  <script>
+    function setAlarm() {
+      alert("アラームをセットしました！");
+      // 実際にはバックエンドでアクティブ状態を保存
+    }
+  </script>
+</body>
+</html>

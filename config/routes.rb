@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-get 'alarms', to: 'alarms#index'
+  resources :alarms, only: [:index, :create, :show, :update, :destroy]
 end
