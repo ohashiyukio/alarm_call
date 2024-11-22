@@ -1,18 +1,23 @@
 class AlarmsController < ApplicationController
+
   def index
-    @alarms = Alarm.all
+    Alarm.where('alarm_time < ?', Time.current).destroy_all
+    @alarms = Alarm.all.order(:alarm_time)
   end
 
   def create
     @alarm = Alarm.new(alarm_params)
     if @alarm.save
+      generate_audio(@alarm.comment, @alarm.id) # 音声ファイル生成
       redirect_to alarms_path, notice: 'アラームが保存されました'
     else
       render :new, status: :unprocessable_entity
     end
   end
-
+  
   def generate_audio(comment, id)
+    require "google/cloud/text_to_speech"
+  
     client = Google::Cloud::TextToSpeech.text_to_speech
     input_text = { text: comment }
     voice = { language_code: "ja-JP", ssml_gender: "NEUTRAL" }
@@ -28,7 +33,8 @@ class AlarmsController < ApplicationController
     File.open(file_path, "wb") do |file|
       file.write(response.audio_content)
     end
-    "Audio file created successfully."
+  
+    Rails.logger.info("Audio file created successfully at #{file_path}.")
   end
   
 
@@ -42,4 +48,13 @@ class AlarmsController < ApplicationController
   def alarm_params
     params.require(:alarm).permit(:alarm_time, :comment)
   end
+
+  class CleanupPastAlarmsJob < ApplicationJob
+    queue_as :default
+  
+    def perform
+      Alarm.where('alarm_time < ?', Time.current).destroy_all
+    end
+  end
 end
+

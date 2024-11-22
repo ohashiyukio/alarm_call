@@ -72,3 +72,4 @@ group :test do
 end
 
 gem 'dotenv-rails'
+gem "google-cloud-text_to_speech", "~> 1.7"
