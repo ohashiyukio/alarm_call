@@ -36,3 +36,6 @@ config/gothic-isotope-441611-h7-bfb70e719f70.json
 
 # .gitignore 
    vendor/.env
+vendor/.env
+/vendor
+vendor/.env
