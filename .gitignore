@@ -29,3 +29,7 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# .gitignore
+   config/gothic-isotope-441611-h7-bfb70e719f70.json
+config/gothic-isotope-441611-h7-bfb70e719f70.json

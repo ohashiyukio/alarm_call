@@ -36,13 +36,9 @@ class AlarmsController < ApplicationController
   
     Rails.logger.info("Audio file created successfully at #{file_path}.")
   end
-  
 
   def new
     @alarm = Alarm.new
-  end
-
-  def update
   end
 
   def alarm_params
