@@ -1,27 +1,15 @@
-import { Application } from "@hotwired/stimulus"
-
-const application = Application.start()
-
-// Configure Stimulus development experience
-application.debug = false
-window.Stimulus   = application
-
-export { application }
-
-const testAudio = new Audio('/test.mp3');
-testAudio.play();
-
-function checkAlarms() {
-  const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
-  console.log("Current time: ", now); // 現在時刻を出力
-  alarms.forEach(alarm => {
-    console.log("Checking alarm: ", alarm.time); // アラーム時刻を出力
-    if (now === alarm.time) {
-      console.log("Alarm triggered: ", alarm.comment);
-      const audio = new Audio(alarm.audioPath);
-      audio.play();
-      alert(alarm.comment);
-    }
-  });
+function playAlarm(audioPath) {
+  const audio = new Audio(audioPath);
+  audio.play();
 }
 
+// アラーム時間に音声を再生
+const alarmTime = "2024-11-20T10:30:00"; // 例: アラーム時間
+const now = new Date();
+const timeToAlarm = new Date(alarmTime) - now;
+
+if (timeToAlarm > 0) {
+  setTimeout(() => {
+    playAlarm("/alarm_1.mp3"); // サーバーから取得した音声ファイルのパス
+  }, timeToAlarm);
+}
