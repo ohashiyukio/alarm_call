@@ -17,3 +17,7 @@ def generate_audio(message)
   end
   "Audio file created successfully."
 end
+
+document.getElementById("playButton").addEventListener("click", () => {
+  playAlarm("/alarm_1.mp3");
+});

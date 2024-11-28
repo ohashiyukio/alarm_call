@@ -1,5 +1,4 @@
 require "active_support/core_ext/integer/time"
-ENV['GOOGLE_APPLICATION_CREDENTIALS'] = '/home/username/projects/alarm_call/config/gothic-isotope-441611-h7-bfb70e719f70.json'
 
 
 Rails.application.configure do
@@ -20,6 +19,8 @@ Rails.application.configure do
   # Enable server timing
   config.server_timing = true
 
+
+  config.public_file_server.enabled = true
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
   if Rails.root.join("tmp/caching-dev.txt").exist?
