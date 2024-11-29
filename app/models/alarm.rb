@@ -1,3 +1,6 @@
 class Alarm < ApplicationRecord
-  validates :alarm_time, :comment, presence: true
+  private
+
+  def set_alarm_time
+  end
 end

@@ -1,18 +1,17 @@
-<h1>新しいアラームを追加</h1>
-
-<%= form_with(model: @alarm, local: true) do |form| %>
-  <div>
-    <%= form.label :alarm_time, '日時' %>
-    <%= form.datetime_local_field :alarm_time %>
+<%= form_with model: @alarm, local: true do |f| %>
+  <div class="field">
+    <%= f.label :date, "日付" %>
+    <%= f.date_field :date, name: "alarm[date]" %> <!-- name属性が重要 -->
   </div>
-
-  <div>
-    <%= form.label :comment, 'コメント' %>
-    <%= form.text_field :comment %>
+  <div class="field">
+    <%= f.label :time, "時間" %>
+    <%= f.time_field :time, name: "alarm[time]" %> <!-- name属性が重要 -->
   </div>
-
-  <div>
-    <%= form.submit '保存' %>
+  <div class="field">
+    <%= f.label :comment, "コメント" %>
+    <%= f.text_field :comment, name: "alarm[comment]" %> <!-- name属性が重要 -->
+  </div>
+  <div class="actions">
+    <%= f.submit "保存" %>
   </div>
 <% end %>
-

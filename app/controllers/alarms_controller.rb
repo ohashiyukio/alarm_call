@@ -6,7 +6,16 @@ class AlarmsController < ApplicationController
   end
 
   def create
-    @alarm = Alarm.new(alarm_params)
+    Rails.logger.info "PARAMS: #{params[:alarm].inspect}"
+    
+    # date と time を組み合わせて datetime に変換
+    combined_time = "#{params[:alarm][:date]} #{params[:alarm][:time]}"
+    
+    @alarm = Alarm.new(
+      alarm_time: DateTime.parse(combined_time),
+      comment: params[:alarm][:comment]
+    )
+  
     if @alarm.save
       generate_audio(@alarm.comment, @alarm.id) # 音声ファイル生成
       redirect_to alarms_path, notice: 'アラームが保存されました'
@@ -14,6 +23,7 @@ class AlarmsController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
+  
   
   def generate_audio(comment, id)
     require "google/cloud/text_to_speech"
@@ -40,6 +50,8 @@ class AlarmsController < ApplicationController
   def new
     @alarm = Alarm.new
   end
+
+  private
 
   def alarm_params
     params.require(:alarm).permit(:alarm_time, :comment)
