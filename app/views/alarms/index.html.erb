@@ -28,37 +28,20 @@
     <% @alarms.each do |alarm| %>
       <div class="alarm-item">
         <span><%= alarm.alarm_time.strftime('%Y-%m-%d %H:%M') %> - <%= alarm.comment %></span>
-        <button onclick="setAlarm()">セット</button>
       </div>
     <% end %>
   </div>
   <button onclick="location.href='<%= new_alarm_path %>'">新しいアラームを追加</button>
 
 <script>
-  const alarms = [
-    <% @alarms.each do |alarm| %>
-      {
-        time: "<%= alarm.alarm_time.strftime('%Y-%m-%d %H:%M:%S') %>",
-        audioPath: "/alarm_<%= alarm.id %>.mp3",
-        comment: "<%= alarm.comment %>"
-      },
-    <% end %>
-  ];
-
-  function checkAlarms() {
-    const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    console.log("Current time: ", now); // 現在時刻を出力
-    alarms.forEach(alarm => {
-      console.log("Checking alarm: ", alarm.time); // アラーム時刻を出力
-      if (now === alarm.time) {
-        console.log("Alarm triggered: ", alarm.comment);
-        const audio = new Audio(alarm.audioPath);
-        audio.play();
-        alert(alarm.comment);
-      }
-    });
-  }
-
-  // 毎秒アラームをチェック
-  setInterval(checkAlarms, 1000);
+  const alarms = <%= @alarms.map { |alarm| {
+    time: alarm.alarm_time.strftime('%Y-%m-%d %H:%M:%S'),
+    audioPath: "/alarm_#{alarm.id}.mp3",
+    comment: alarm.comment
+  } }.to_json.html_safe %>;
+  console.log("アラームデータ: ", alarms);
 </script>
+
+
+
+

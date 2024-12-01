@@ -24,23 +24,25 @@
 <body>
   <h1>アラーム</h1>
   <div id="alarmMessage">2024-11-21 08:00 - 朝のジョギング</div>
-  <button id="stopButton">ストップ</button>
+<button id="enableAudio">アラームを有効にする</button>
+
+
 
   <audio id="alarmSound" loop>
     <source src="alarm.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 
-  <script>
-    const alarmSound = document.getElementById('alarmSound');
-    const stopButton = document.getElementById('stopButton');
-    alarmSound.play();
-
-    stopButton.addEventListener('click', () => {
-      alarmSound.pause();
-      alert('アラームを停止しました');
-      // 必要ならバックエンド側に停止状態を通知
-    });
-  </script>
+<script>
+  const alarms = [
+    <% @alarms.each do |alarm| %>
+      {
+        time: "<%= alarm.alarm_time.strftime('%Y-%m-%d %H:%M:%S') %>",
+        audioPath: "/alarm_<%= alarm.id %>.mp3",
+        comment: "<%= alarm.comment %>"
+      },
+    <% end %>
+  ];
+</script>
 </body>
 </html>
