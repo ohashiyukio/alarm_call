@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+ENV['GOOGLE_APPLICATION_CREDENTIALS'] ||= '/home/yukioohashi/projects/alarm_call/config/gothic-isotope-441611-h7-bfb70e719f70.json'
 
 
 Rails.application.configure do
