@@ -33,43 +33,11 @@
   <button onclick="location.href='<%= new_alarm_path %>'">新しいアラームを追加</button>
 
   <script>
-document.addEventListener("click", () => {
-  const dummyAudio = new Audio();
-  dummyAudio.muted = true; // ミュート状態で初期化
-  dummyAudio.play()
-    .then(() => {
-      console.log("音声再生が許可されました");
-    })
-    .catch(err => {
-      console.error("音声再生の初期化に失敗しました: ", err);
-    });
-}, { once: true });
-
-    // アラームデータを取得
-const alarms = <%= @alarms.map { |alarm| {
-  time: alarm.alarm_time.strftime('%Y-%m-%d %H:%M:%S'),
-  audioPath: "/alarm_#{alarm.id}.mp3",
-  comment: alarm.comment
-} }.to_json.html_safe %>;
-
-console.log("アラームデータ: ", alarms);
-// 初期ロードで音声再生の許可を得るための無音オーディオを準備
-let audioContext;
-let audioElement;
-
-function initializeAudio() {
-  if (!audioContext) {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    audioElement = new Audio();
-    audioElement.src = ""; // 無音ファイル（もし用意できなければ空のオーディオも可）
-    const source = audioContext.createMediaElementSource(audioElement);
-    source.connect(audioContext.destination);
-    console.log("Audio initialized");
-  }
+if (Notification.permission !== "granted") {
+  Notification.requestPermission().then(permission => {
+    console.log("通知許可:", permission);
+  });
 }
-
-// ページロード時にクリックイベントを要求
-window.addEventListener('click', initializeAudio, { once: true });
 
 function checkAlarms() {
   const now = new Date();
@@ -83,27 +51,19 @@ function checkAlarms() {
       now.getMinutes() === alarmTime.getMinutes()
     ) {
       console.log("Alarm triggered:", alarm.comment);
+
+      // 通知を表示
+      if (Notification.permission === "granted") {
+        new Notification("アラーム通知", { body: alarm.comment });
+      } else {
+        alert(alarm.comment);
+      }
+
+      // 音声再生を試行
       const audio = new Audio(alarm.audioPath);
-
-      // 音声再生の試行
-      audio.play()
-        .then(() => {
-          console.log("音声が再生されました: ", alarm.comment);
-        })
-        .catch(err => {
-          console.error("音声再生エラー: ", err);
-          alert(`${alarm.comment}（音声の再生に失敗しました）`);
-        });
-
-      // アラートで通知
-      alert(alarm.comment);
+      audio.play().catch(err => {
+        console.error("音声再生エラー:", err);
+      });
     }
   });
 }
-
-// 1分ごとにアラームをチェック
-setInterval(checkAlarms, 60000);
-
-  </script>
-</body>
-</html>
