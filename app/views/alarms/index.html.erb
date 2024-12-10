@@ -31,39 +31,41 @@
     <% end %>
   </div>
   <button onclick="location.href='<%= new_alarm_path %>'">新しいアラームを追加</button>
+</body>
+<script>
+  const alarms = <%= @alarms.map { |alarm| { 
+    time: alarm.alarm_time.strftime('%Y-%m-%dT%H:%M:%S'), 
+    audioPath: "/alarm_#{alarm.id}.mp3", 
+    comment: alarm.comment 
+  } }.to_json.html_safe %>;
+  console.log("アラームデータ:", alarms);
 
-  <script>
-if (Notification.permission !== "granted") {
-  Notification.requestPermission().then(permission => {
-    console.log("通知許可:", permission);
-  });
-}
+  function checkAlarms() {
+    const now = new Date();
+    alarms.forEach(alarm => {
+      const alarmTime = new Date(alarm.time);
+      if (Math.abs(now - alarmTime) < 60000) { // 1分以内で一致
+        console.log("アラームがトリガーされました:", alarm.comment);
 
-function checkAlarms() {
-  const now = new Date();
-  alarms.forEach(alarm => {
-    const alarmTime = new Date(alarm.time);
-    if (
-      now.getFullYear() === alarmTime.getFullYear() &&
-      now.getMonth() === alarmTime.getMonth() &&
-      now.getDate() === alarmTime.getDate() &&
-      now.getHours() === alarmTime.getHours() &&
-      now.getMinutes() === alarmTime.getMinutes()
-    ) {
-      console.log("Alarm triggered:", alarm.comment);
+        const audio = new Audio(alarm.audioPath);
+        audio.play()
+          .then(() => console.log("音声再生成功:", alarm.audioPath))
+          .catch(err => console.error("音声再生エラー:", err.message, alarm.audioPath));
 
-      // 通知を表示
-      if (Notification.permission === "granted") {
-        new Notification("アラーム通知", { body: alarm.comment });
-      } else {
         alert(alarm.comment);
       }
+    });
+  }
 
-      // 音声再生を試行
-      const audio = new Audio(alarm.audioPath);
-      audio.play().catch(err => {
-        console.error("音声再生エラー:", err);
-      });
-    }
-  });
-}
+  // 1秒ごとにアラームをチェック
+  setInterval(checkAlarms, 1000);
+
+  document.addEventListener("click", () => {
+    const dummyAudio = new Audio();
+    dummyAudio.muted = true;
+    dummyAudio.play()
+      .then(() => console.log("音声再生が許可されました"))
+      .catch(err => console.error("音声再生の初期化に失敗しました:", err));
+  }, { once: true });
+</script>
+</html>
